@@ -2,7 +2,7 @@
 let canvas,canvas2,ctx,ctx2;
 async function loadModel() {
     console.log('Loading model');
-    const model = await tf.loadLayersModel('http://127.0.0.1:8080/my-model-55000.json');
+    const model = await tf.loadLayersModel('http://127.0.0.1:8080/my-model.json');
     console.log('Model loaded');
     console.log(model);
 	return model;
