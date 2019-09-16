@@ -1,4 +1,3 @@
-//const fetch = require('node-fetch');
 let canvas,canvas2,ctx,ctx2;
 async function loadModel() {
     console.log('Loading model');
