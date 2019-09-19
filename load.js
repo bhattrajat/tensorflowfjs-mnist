@@ -73,11 +73,14 @@ async function predict(flag){
     tf_tensor = await tf.browser.fromPixels(canvas,1);
     if(flag){
         tf_tensor = detectDigit(tf_tensor);
+        resized_arr = tf.image.resizeBilinear(tf_tensor, [20, 20]);
+        resized_arr = resized_arr.pad([[4,4],[4,4],[0,0]]); 
+    }
+    else{
+        resized_arr = tf.image.resizeBilinear(tf_tensor, [28, 28]);
     }
     
-    resized_arr = tf.image.resizeBilinear(tf_tensor, [20, 20], true);
     console.log(resized_arr.shape);
-    resized_arr = resized_arr.pad([[4,4],[4,4],[0,0]]); 
     tf.browser.toPixels(resized_arr,canvas); //used for debugging purpose.
     resized_arr = tf.cast(resized_arr,'float32');
     //ctx2.drawImage(canvas,0,0,200,200,0,0,28,28);
