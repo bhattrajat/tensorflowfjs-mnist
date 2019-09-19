@@ -15,7 +15,7 @@ function prepCanvas() {
     //ctx2 = canvas2.getContext('2d');
     ctx.lineJoin = 'round';
     ctx.lineCap = 'round';
-    ctx.lineWidth = 12;
+    ctx.lineWidth = 10;
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     //ctx2.fillStyle = 'black';
@@ -70,7 +70,7 @@ async function predict(flag){
     grayscale();
     
     console.log('performing resize');
-    tf_tensor = tf.browser.fromPixels(canvas,1);
+    tf_tensor = await tf.browser.fromPixels(canvas,1);
     if(flag){
         tf_tensor = detectDigit(tf_tensor);
     }
@@ -153,8 +153,9 @@ function detectDigit(tensor) {
     console.log('Y2:' + y2);
     console.log('width:' + width);
     console.log('height:' + height);
-    tensor = tensor.slice([y1,x1],[height,width]);
-    tf.browser.toPixels(tensor,canvas);
+    //tensor = tensor.slice([x1,y1,0],[width,height,1]);
+    tensor = tensor.slice([x1-8,y1-8,0],[height+16, width+16, 1]);
+    //await tf.browser.toPixels(tensor,canvas);
     return tensor;
 }
 
