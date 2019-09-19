@@ -41,6 +41,15 @@ function prepCanvas() {
         }
     }
 
+    function touchdraw(e) {
+        if(flag) {
+        e.preventDefault();
+        //console.log('inside touch draw');
+            ctx.lineTo(e.touches[0].pageX - canvas.offsetLeft, e.touches[0].pageY - canvas.offsetTop);
+            ctx.stroke();
+        }
+    }
+
     
     
 
@@ -50,7 +59,7 @@ function prepCanvas() {
     canvas.addEventListener('mouseout',stop);
     canvas.addEventListener('touchstart',start);
     canvas.addEventListener('touchend',stop);
-    canvas.addEventListener('touchmove',draw);
+    canvas.addEventListener('touchmove',touchdraw);
 }
 
 document.addEventListener('DOMContentLoaded', loadModel);
