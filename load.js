@@ -66,10 +66,10 @@ async function predict(flag){
         tf_tensor = detectDigit(tf_tensor);
     }
     
-    resized_arr = tf.image.resizeBilinear(tf_tensor, [20, 20]);
+    resized_arr = tf.image.resizeBilinear(tf_tensor, [20, 20], true);
     console.log(resized_arr.shape);
     resized_arr = resized_arr.pad([[4,4],[4,4],[0,0]]); 
-    //tf.browser.toPixels(resized_arr,canvas);
+    tf.browser.toPixels(resized_arr,canvas); //used for debugging purpose.
     resized_arr = tf.cast(resized_arr,'float32');
     //ctx2.drawImage(canvas,0,0,200,200,0,0,28,28);
     
@@ -132,7 +132,7 @@ function detectDigit(tensor) {
     let width = y2 - y1;
     ctx.strokeStyle = "blue";
     ctx.lineWidth = 2;
-    ctx.strokeRect(y1 - 8, x1 - 8, width + 16, height + 16);
+    ctx.strokeRect(y1, x1, width, height);
 
     ctx.strokeStyle = 'white';
     ctx.lineWidth = 12;
@@ -144,7 +144,8 @@ function detectDigit(tensor) {
     console.log('Y2:' + y2);
     console.log('width:' + width);
     console.log('height:' + height);
-    tensor = tensor.slice([y1-8,x1-8],[height+16,width+16,1]);
+    tensor = tensor.slice([y1,x1],[height,width]);
+    tf.browser.toPixels(tensor,canvas);
     return tensor;
 }
 
