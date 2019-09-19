@@ -66,12 +66,19 @@ document.addEventListener('DOMContentLoaded', loadModel);
 document.addEventListener('DOMContentLoaded', prepCanvas);
 //console.log(model)
 
-async function predict(){
+async function predict(flag){
     grayscale();
+    
     console.log('performing resize');
     tf_tensor = tf.browser.fromPixels(canvas,1);
-    resized_arr = tf.image.resizeBilinear(tf_tensor, [28, 28]);
-    //tf.browser.toPixels(resized_arr,canvas2);
+    if(flag){
+        tf_tensor = detectDigit(tf_tensor);
+    }
+    
+    resized_arr = tf.image.resizeBilinear(tf_tensor, [20, 20], true);
+    console.log(resized_arr.shape);
+    resized_arr = resized_arr.pad([[4,4],[4,4],[0,0]]); 
+    tf.browser.toPixels(resized_arr,canvas); //used for debugging purpose.
     resized_arr = tf.cast(resized_arr,'float32');
     //ctx2.drawImage(canvas,0,0,200,200,0,0,28,28);
     
@@ -100,6 +107,56 @@ function grayscale() {
     }
     ctx.putImageData(imageData, 0, 0);
 };
+
+function detectDigit(tensor) {
+    let arr = tensor.arraySync();
+    let xflag = true,yflag = true;
+    let x1 = null,x2 = null,y1 =null,y2 = null;
+    for(i=0;i<200;i++){
+        if(tf.max(arr[i]).dataSync()[0] === 255){
+            //console.log('setting x1 with i:' + i);
+            //console.log(xflag);
+            if(xflag){
+                //console.log('setting x1 with i:' + i);
+                //console.log('value: ' + tf.max(arr[i]).dataSync()[0])
+                x1 = i;
+                xflag = false;
+            }
+            else{
+                x2 = i;
+            }
+        }
+        if(tf.max(tensor.slice([0,i],[200,1]).dataSync()).dataSync()[0] === 255){
+            if(yflag){
+                y1 = i;
+                yflag = false;
+            }
+            else{
+                y2 = i;
+            }
+        }
+    }
+
+    let height = x2 - x1;
+    let width = y2 - y1;
+    ctx.strokeStyle = "blue";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(y1, x1, width, height);
+
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 12;
+
+
+    console.log('X1:' + x1);
+    console.log('X2:' + x2);
+    console.log('Y1:' + y1);
+    console.log('Y2:' + y2);
+    console.log('width:' + width);
+    console.log('height:' + height);
+    tensor = tensor.slice([y1,x1],[height,width]);
+    tf.browser.toPixels(tensor,canvas);
+    return tensor;
+}
 
 function reset() {
     ctx.fillStyle = 'black';

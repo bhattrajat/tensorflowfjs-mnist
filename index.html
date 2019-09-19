@@ -11,6 +11,10 @@
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.1.2/dist/tf.min.js"></script>
   <!-- Import tfjs-vis -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis@1.0.2/dist/tfjs-vis.umd.min.js"></script>
+  
+  <!--this is used for Numpy functionalities in javascript -->
+  <script src="https://cdn.jsdelivr.net/gh/nicolaspanel/numjs@0.15.1/dist/numjs.min.js"></script>
+
 
   <!-- Import the data file -->
   <!--
@@ -31,7 +35,8 @@
     <!---<canvas id="mycanvas2" width="200px" height="200px"></canvas>-->
   </div>
   <div class = "row h-100 justify-content-center align-items-center">
-    <button class="m-4 btn btn-primary" onclick="predict()">Predict</button>
+    <button class="btn btn-primary" onclick="predict()">Predict</button>
+    <button class="m-2 btn btn-info" onclick="predict(true)">Predict(Beta)</button>
     <button class="btn btn-danger" onclick="reset()">Reset</button>
   </div>
   <div class = "row h-100 justify-content-center align-items-center">
